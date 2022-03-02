@@ -3,9 +3,10 @@ import { Navbar } from '../ui/Navbar';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import { messages } from '../../helpers/calendar-messages-español';
+import { CalendarModal } from './CalendarModal';
+import { CalendarEvent } from './CalendarEvent';
 import 'moment/locale/es';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { CalendarEvent } from './CalendarEvent';
 
 moment.locale('es');
 
@@ -74,6 +75,7 @@ export const CalendarScreen = () => {
                     event: CalendarEvent,
                 }}
             />
+            <CalendarModal />
         </div>
     );
 };
