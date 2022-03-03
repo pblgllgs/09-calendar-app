@@ -4,6 +4,8 @@ import DateTimePicker from 'react-datetime-picker';
 import './modal.css';
 import moment from 'moment';
 import Swal from 'sweetalert2';
+import { useDispatch, useSelector } from 'react-redux';
+import { uiCloseModal } from '../../actions/ui';
 
 const customStyles = {
     content: {
@@ -22,6 +24,9 @@ const now = moment().minutes(0).seconds(0).add(1, 'hours');
 const nowPlusHour = now.clone().add(1, 'hours');
 
 export const CalendarModal = () => {
+    const dispatch = useDispatch();
+    const { modalOpen } = useSelector((state) => state.ui);
+
     const [dateStart, setDateStart] = useState(now.toDate());
     const [dateEnd, setDateEnd] = useState(nowPlusHour.toDate());
     const [titleValid, setTitleValid] = useState(true);
@@ -58,26 +63,26 @@ export const CalendarModal = () => {
         });
     };
     const closeModal = () => {
-    //TODO: cerrar el modal
+        dispatch(uiCloseModal());
     };
-    
+
     const handleSubmitform = (e) => {
         e.preventDefault();
-        
+
         const momentStart = moment(start);
         const momentEnd = moment(end);
 
-        if(momentStart.isSameOrAfter(momentEnd)){
-            Swal.fire('Error','La fecha fin debe de ser mayor que la fecha de inicio', 'error')
+        if (momentStart.isSameOrAfter(momentEnd)) {
+            Swal.fire(
+                'Error',
+                'La fecha fin debe de ser mayor que la fecha de inicio',
+                'error'
+            );
             return;
         }
 
-        if(title.trim().length < 2 ){
-            Swal.fire(
-                'Error',
-                'Debe de ingresar un título',
-                'error'
-            );
+        if (title.trim().length < 2) {
+            Swal.fire('Error', 'Debe de ingresar un título', 'error');
             return setTitleValid(false);
         }
 
@@ -87,10 +92,9 @@ export const CalendarModal = () => {
         closeModal();
     };
 
-
     return (
         <Modal
-            isOpen={true}
+            isOpen={modalOpen}
             onRequestClose={closeModal}
             style={customStyles}
             closeTimeoutMS={200}
