@@ -7,41 +7,30 @@ import { CalendarModal } from './CalendarModal';
 import { CalendarEvent } from './CalendarEvent';
 import 'moment/locale/es';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { uiOpenModal } from '../../actions/ui';
+import { eventSetActive } from '../../actions/events';
+import { AddNewFav } from '../ui/AddNewFav';
 
 moment.locale('es');
 
 const localizer = momentLocalizer(moment);
 
-const events = [
-    {
-        title: 'Cloud Practitioner exam',
-        start: moment().toDate(),
-        end: moment().add(2, 'hours').toDate(),
-        bgcolor: '3966FF',
-        notes: 'Sacar hora',
-        user: {
-            _id: '123',
-            name: 'Pablo',
-        },
-    },
-];
-
 export const CalendarScreen = () => {
-
     const dispatch = useDispatch();
+
+    const { events } = useSelector((state) => state.calendar);
 
     const [lastView, setLastView] = useState(
         localStorage.getItem('lastView') || 'month'
     );
 
     const onDoubleClick = (event) => {
-        dispatch(uiOpenModal())
+        dispatch(uiOpenModal());
     };
 
-    const onSelectEvent = () => {
-        console.log('Selected');
+    const onSelectEvent = (e) => {
+        dispatch(eventSetActive(e));
     };
 
     const onViewChange = (e) => {
@@ -79,6 +68,7 @@ export const CalendarScreen = () => {
                     event: CalendarEvent,
                 }}
             />
+            <AddNewFav />
             <CalendarModal />
         </div>
     );
