@@ -6,7 +6,11 @@ import moment from 'moment';
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import { uiCloseModal } from '../../actions/ui';
-import { eventAddNew, eventClearActiveEvent } from '../../actions/events';
+import {
+    eventAddNew,
+    eventClearActiveEvent,
+    eventUpdated,
+} from '../../actions/events';
 
 const customStyles = {
     content: {
@@ -32,6 +36,9 @@ const initEvent = {
 };
 
 export const CalendarModal = () => {
+
+    
+
     const dispatch = useDispatch();
     const { modalOpen } = useSelector((state) => state.ui);
 
@@ -48,6 +55,8 @@ export const CalendarModal = () => {
     useEffect(() => {
         if (activeEvent) {
             setFormValues(activeEvent);
+        }else{
+            setFormValues(initEvent)
         }
     }, [activeEvent, setFormValues]);
 
@@ -101,16 +110,20 @@ export const CalendarModal = () => {
 
         //TODO:database
 
-        dispatch(
-            eventAddNew({
-                ...formValues,
-                id: new Date().getTime(),
-                user: {
-                    _id: '123',
-                    name: 'pablo',
-                },
-            })
-        );
+        if (activeEvent) {
+            dispatch(eventUpdated(formValues));
+        } else {
+            dispatch(
+                eventAddNew({
+                    ...formValues,
+                    id: new Date().getTime(),
+                    user: {
+                        _id: '123',
+                        name: 'pablo',
+                    },
+                })
+            );
+        }
 
         setTitleValid(true);
         closeModal();
@@ -125,7 +138,7 @@ export const CalendarModal = () => {
             className="modal"
             overlayClassName="modal-fondo"
         >
-            <h1> Nuevo evento </h1>
+            <h1> {(activeEvent)? 'Editar evento': 'Nuevo evento' } </h1>
             <hr />
             <form className="container" onSubmit={handleSubmitform}>
                 <div className="form-group">
