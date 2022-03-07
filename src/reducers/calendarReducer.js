@@ -4,6 +4,7 @@ import { types } from "../types/types";
 
 const initialState = {
     events:[{
+        id: new Date().getTime(),
         title: 'Cloud Practitioner exam',
         start: moment().toDate(),
         end: moment().add(2, 'hours').toDate(),
