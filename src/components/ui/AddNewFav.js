@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import { eventClearActiveEvent } from '../../actions/events';
 import { uiOpenModal } from '../../actions/ui';
 
 export const AddNewFav = () => {
@@ -7,6 +8,7 @@ export const AddNewFav = () => {
 
     const handleOpenModal = () => {
         dispatch(uiOpenModal());
+        dispatch(eventClearActiveEvent());
     };
 
     return (
