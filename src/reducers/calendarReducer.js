@@ -1,21 +1,20 @@
-import moment from 'moment';
 import { types } from '../types/types';
 
+// {
+//     id: 'ahskdahskdjah',
+//     title: 'Cloud Practitioner exam',
+//     start: moment().toDate(),
+//     end: moment().add(2, 'hours').toDate(),
+//     bgcolor: '3966FF',
+//     notes: 'Sacar hora',
+//     user: {
+//         _id: '123',
+//         name: 'Pablo',
+//     },
+// },
+
 const initialState = {
-    events: [
-        {
-            id: new Date().getTime(),
-            title: 'Cloud Practitioner exam',
-            start: moment().toDate(),
-            end: moment().add(2, 'hours').toDate(),
-            bgcolor: '3966FF',
-            notes: 'Sacar hora',
-            user: {
-                _id: '123',
-                name: 'Pablo',
-            },
-        },
-    ],
+    events: [],
     activeEvent: null,
 };
 
@@ -47,10 +46,20 @@ export const calendarReducer = (state = initialState, action) => {
         case types.eventDeleted:
             return {
                 ...state,
-                events: state.events.filter((e) =>
-                    e.id !== state.activeEvent.id
+                events: state.events.filter(
+                    (e) => e.id !== state.activeEvent.id
                 ),
-                activeEvent: null
+                activeEvent: null,
+            };
+        case types.eventLoaded:
+            return {
+                ...state,
+                events: [...action.payload],
+            };
+
+        case types.eventClearAll:
+            return {
+                ...initialState,
             };
         default:
             return state;
