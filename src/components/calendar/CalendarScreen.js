@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navbar } from '../ui/Navbar';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
@@ -9,7 +9,11 @@ import 'moment/locale/es';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { uiOpenModal } from '../../actions/ui';
-import { eventClearActiveEvent, eventSetActive } from '../../actions/events';
+import {
+    eventClearActiveEvent,
+    eventSetActive,
+    eventStartLoading,
+} from '../../actions/events';
 import { AddNewFav } from '../ui/AddNewFav';
 import { DeleteEventFav } from '../ui/DeleteEventFav';
 
@@ -17,26 +21,19 @@ moment.locale('es');
 
 const localizer = momentLocalizer(moment);
 
-const now = moment().minutes(0).seconds(0).add(1, 'hours');
-const nowPlusHour = now.clone().add(1, 'hours');
-
-const initEvent = {
-    title: '',
-    notes: '',
-    start: now.toDate(),
-    end: nowPlusHour.toDate(),
-};
-
 export const CalendarScreen = () => {
     const dispatch = useDispatch();
 
     const { events, activeEvent } = useSelector((state) => state.calendar);
-
-    const [formValues, setFormValues] = useState(initEvent);
+    const { uid } = useSelector((state) => state.auth);
 
     const [lastView, setLastView] = useState(
         localStorage.getItem('lastView') || 'month'
     );
+
+    useEffect(() => {
+        dispatch(eventStartLoading());
+    }, [dispatch]);
 
     const onDoubleClick = (event) => {
         dispatch(uiOpenModal());
@@ -53,7 +50,7 @@ export const CalendarScreen = () => {
 
     const eventStyleGetter = (event, start, end, isSelected) => {
         const style = {
-            backgroundColor: '#4a99ea',
+            backgroundColor: uid === event.user._id ? '#4a99ea' : '#465660',
             borderRadius: '0px',
             opacity: 0.8,
             display: 'block',
@@ -64,18 +61,6 @@ export const CalendarScreen = () => {
 
     const onSelectSlot = (slotInfo) => {
         dispatch(eventClearActiveEvent());
-        // const start = moment(slotInfo.start);
-        // const end = moment(slotInfo.end);
-
-        // const event = {
-        //     title: '',
-        //     description: '',
-        //     start: start.toDate(),
-        //     end: end.toDate(),
-        // };
-        
-        // dispatch(uiOpenModal());
-        // setFormValues(event);
     };
 
     return (
