@@ -7,9 +7,9 @@ import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import { uiCloseModal } from '../../actions/ui';
 import {
-    eventAddNew,
     eventClearActiveEvent,
-    eventUpdated,
+    eventStartAddNew,
+    eventStartUpdated,
 } from '../../actions/events';
 
 const customStyles = {
@@ -36,9 +36,6 @@ const initEvent = {
 };
 
 export const CalendarModal = () => {
-
-    
-
     const dispatch = useDispatch();
     const { modalOpen } = useSelector((state) => state.ui);
 
@@ -55,8 +52,8 @@ export const CalendarModal = () => {
     useEffect(() => {
         if (activeEvent) {
             setFormValues(activeEvent);
-        }else{
-            setFormValues(initEvent)
+        } else {
+            setFormValues(initEvent);
         }
     }, [activeEvent, setFormValues]);
 
@@ -95,12 +92,11 @@ export const CalendarModal = () => {
         const momentEnd = moment(end);
 
         if (momentStart.isSameOrAfter(momentEnd)) {
-            Swal.fire(
+            return Swal.fire(
                 'Error',
                 'La fecha fin debe de ser mayor que la fecha de inicio',
                 'error'
             );
-            return;
         }
 
         if (title.trim().length < 2) {
@@ -108,21 +104,10 @@ export const CalendarModal = () => {
             return setTitleValid(false);
         }
 
-        //TODO:database
-
         if (activeEvent) {
-            dispatch(eventUpdated(formValues));
+            dispatch(eventStartUpdated(formValues));
         } else {
-            dispatch(
-                eventAddNew({
-                    ...formValues,
-                    id: new Date().getTime(),
-                    user: {
-                        _id: '123',
-                        name: 'pablo',
-                    },
-                })
-            );
+            dispatch(eventStartAddNew(formValues));
         }
 
         setTitleValid(true);
@@ -138,7 +123,7 @@ export const CalendarModal = () => {
             className="modal"
             overlayClassName="modal-fondo"
         >
-            <h1> {(activeEvent)? 'Editar evento': 'Nuevo evento' } </h1>
+            <h1> {activeEvent ? 'Editar evento' : 'Nuevo evento'} </h1>
             <hr />
             <form className="container" onSubmit={handleSubmitform}>
                 <div className="form-group">
