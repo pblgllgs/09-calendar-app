@@ -66,13 +66,13 @@ export const startChecking = () => {
                 })
             );
         } else {
-            Swal.fire('Error', body.msg, 'error');
-            dispatch(checkingfinish());
+            // Swal.fire('Error', body.msg, 'error');
+            dispatch(checkingFinish());
         }
     };
 };
 
-const checkingfinish = () => ({
+const checkingFinish = () => ({
     type: types.authCheckingFinish,
 });
 
@@ -80,3 +80,13 @@ const login = (user) => ({
     type: types.authLogin,
     payload: user,
 });
+
+const logout = () => ({ type: types.authLogout });
+
+export const startLogout = () => {
+    return (dispatch) => {
+        localStorage.clear();
+        dispatch(logout());
+        Swal.fire('Sesión Terminada', 'Sesión cerrada', 'success');
+    };
+};
