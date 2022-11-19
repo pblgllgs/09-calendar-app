@@ -1,8 +1,8 @@
-# Intallation:
+# Intallation
 
 ## Environment Variables
 
-set the following environment variable with the url enpoint from the API backend e.g:
+set the following environment variable with the url enpoint from the API backend e.g (fetch.js):
 
 ```
 REACT_APP_API_URL = http://localhost:4000/api
@@ -22,6 +22,7 @@ mensaje de ok:
 Servidor corriendo en puerto 4000
 DB online!
 ```
+
 ### Run frontend
 
 ```
@@ -29,4 +30,3 @@ $ start
 npm install
 npm run start
 ```
-
